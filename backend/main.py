@@ -10,6 +10,8 @@ from contextlib import asynccontextmanager
 from typing import Any, Dict
 
 import uvicorn
+from chatbot_backend.discord_bot.discord_bot import DISCORD_TOKEN
+from chatbot_backend.discord_bot.discord_bot import client as discord_client
 from dotenv import load_dotenv
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,11 +20,31 @@ from fastapi.responses import JSONResponse
 # Load environment variables from .env file
 load_dotenv()
 
+
+# Create an async context manager to start and stop the Discord bot
+@asynccontextmanager
+async def discord_bot_lifespan(app: FastAPI):
+    """
+    Context manager to start and stop the Discord bot when the application starts and stops.
+    """
+    # print("Starting Discord bot")
+    # await discord_client.start(DISCORD_TOKEN)
+    # yield
+    # print("Stopping Discord bot")
+    # await discord_client.close()
+    print("Starting Discord bot")
+    asyncio.create_task(discord_client.start(DISCORD_TOKEN))
+    yield
+    print("Stopping Discord bot")
+    asyncio.create_task(discord_client.close())
+
+
 # Create FastAPI app instance with metadata for documentation
 app = FastAPI(
     title="Bot Contact Point API",
     description="API for managing bot communications and interactions",
     version="0.1.0",
+    lifespan=discord_bot_lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
