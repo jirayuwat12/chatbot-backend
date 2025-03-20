@@ -3,8 +3,8 @@ import os
 import discord
 from dotenv import load_dotenv
 
-from .constants import HOW_TO_USE_BOT_COMMAND, HOW_TO_USE_BOT_MESSAGE, TO_USE_BOT_KEYWORDS
 from .commands import CommandProcessor
+from .constants import HOW_TO_USE_BOT_COMMAND, HOW_TO_USE_BOT_MESSAGE, TO_USE_BOT_KEYWORDS
 
 # Load environment variables
 load_dotenv()
@@ -16,6 +16,7 @@ client = discord.Client(command_prefix="!", intents=intents)
 
 # Create a command processor
 command_processor = CommandProcessor()
+
 
 # Define the on_ready event
 @client.event
@@ -44,4 +45,4 @@ async def on_message(message: discord.Message) -> None:
 
         # Send command to the command processor
         print(f"Responding to message from {message.author}: {formatted_command}")
-        command_processor.process_command(formatted_command, message)
+        await command_processor.process_command(formatted_command, message)

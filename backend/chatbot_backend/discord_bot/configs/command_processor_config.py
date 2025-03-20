@@ -1,5 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+from ..commands.base_commands import BaseCommands
+
 
 @dataclass
 class CommandProcessorConfig:
-    pass
+    commands: list[BaseCommands] = field(default_factory=list)
